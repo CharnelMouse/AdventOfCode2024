@@ -18,9 +18,26 @@ IN: AOC2024.tests
 [ solve-01 ]
 test-example
 
+{ 2 4 }
+{
+"7 6 4 2 1"
+"1 2 7 8 9"
+"9 7 6 2 1"
+"1 3 2 4 5"
+"8 6 4 4 1"
+"1 3 6 7 9"
+}
+[ solve-02 ]
+test-example
+
 ! tests for real inputs, delete if using different ones
 
 { { 2742123 21328497 } }
 [ solve-01 ]
 1
+test-input
+
+{ { 407 459 } }
+[ solve-02 ]
+2
 test-input
