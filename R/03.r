@@ -1,21 +1,19 @@
-x <- readLines("inputs/03.txt")
+x <- paste(readLines("inputs/03.txt"), collapse = "")
 
 # part one: 181345830
 terms <- regmatches(
   x,
   gregexpr("mul\\(\\d{1,3},\\d{1,3}\\)", x)
-) |>
-  Reduce(f = c, init = character())
+)[[1]]
 substr(terms, 5, nchar(terms) - 1) |>
   strsplit(",", fixed = TRUE) |>
   vapply(\(pair) prod(as.integer(pair)), numeric(1)) |>
   sum()
 
 # part two: 98729041
-allx <- paste(x, collapse = "")
 allterms <- regmatches(
-  allx,
-  gregexpr("do\\(\\)|don't\\(\\)|mul\\(\\d{1,3},\\d{1,3}\\)", allx)
+  x,
+  gregexpr("do\\(\\)|don't\\(\\)|mul\\(\\d{1,3},\\d{1,3}\\)", x)
 )[[1]]
 to_enabled <- function(y) {
   used <- integer()
@@ -32,12 +30,8 @@ to_enabled <- function(y) {
   }
   y[used][startsWith(y[used], "mul")]
 }
-tst <- function(allterms) {
-  enabled <- to_enabled(allterms) |>
-    Reduce(f = c, init = character())
-  substr(enabled, 5, nchar(enabled) - 1) |>
-    strsplit(",", fixed = TRUE) |>
-    vapply(\(pair) prod(as.integer(pair)), numeric(1)) |>
-    sum()
-}
-tst(allterms)
+enabled <- to_enabled(allterms)
+substr(enabled, 5, nchar(enabled) - 1) |>
+  strsplit(",", fixed = TRUE) |>
+  vapply(\(pair) prod(as.integer(pair)), numeric(1)) |>
+  sum()
