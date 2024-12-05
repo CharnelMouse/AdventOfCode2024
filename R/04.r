@@ -51,27 +51,16 @@ other_diag <- hword(rev_skewed)
 horiz + vert + main_diag + other_diag
 
 # part two: 1950
-crosses <- sum(vapply(
-  seq_len(nd[[1]] - 2L),
-  \(row) {
-    sum(vapply(
-      seq_len(nd[[2]] - 2L),
-      \(col) {
-        tri1 <- paste0(
-          grid[row, col],
-          grid[row + 1, col + 1],
-          grid[row + 2, col + 2]
-        )
-        tri2 <- paste0(
-          grid[row + 2, col],
-          grid[row + 1, col + 1],
-          grid[row, col + 2]
-        )
-        (tri1 == "MAS" || tri1 == "SAM") && (tri2 == "MAS" || tri2 == "SAM")
-      },
-      logical(1)
-    ))
-  },
-  integer(1)
+as <- which(grid[2:(nd[[1]] - 1), 2:(nd[[2]] - 1)] == "A", arr.ind = TRUE)
+crosses <- sum(apply(
+  as,
+  1,
+  \(inds) {
+    row <- inds[[1]]
+    col <- inds[[2]]
+    tri1 <- c(grid[row, col], grid[row + 2, col + 2])
+    tri2 <- c(grid[row + 2, col], grid[row, col + 2])
+    setequal(tri1, c("M", "S")) && setequal(tri2, c("M", "S"))
+  }
 ))
 crosses
