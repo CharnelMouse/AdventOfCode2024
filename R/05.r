@@ -8,8 +8,8 @@ updates <- x[seq(gap + 1, length(x))] |>
   strsplit(",", fixed = TRUE) |>
   lapply(as.integer)
 
-# part one
 pord_ints <- sort(unique(as.vector(pords)))
+update_indices <- lapply(updates, match, pord_ints)
 pord_indices <- pords
 pord_indices[] <- match(pord_indices, pord_ints)
 pord_mat <- matrix(FALSE, nrow = length(pord_ints), ncol = length(pord_ints))
@@ -19,7 +19,8 @@ for (n in seq_len(nrow(pord_indices))) {
     pord_indices[[n, 2]]
   ]] <- TRUE
 }
-update_indices <- lapply(updates, match, pord_ints)
+
+# part one: 5651
 sorted <- vapply(
   update_indices,
   \(x) {
@@ -30,7 +31,7 @@ sorted <- vapply(
 )
 sum(vapply(updates[sorted], \(x) x[(length(x) + 1)/2], integer(1)))
 
-# part two
+# part two: 4743
 unsorted_ords <- lapply(
   update_indices[!sorted],
   \(x) {
