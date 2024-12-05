@@ -29,3 +29,16 @@ sorted <- vapply(
   logical(1)
 )
 sum(vapply(updates[sorted], \(x) x[(length(x) + 1)/2], integer(1)))
+
+# part two
+unsorted_ords <- lapply(
+  update_indices[!sorted],
+  \(x) {
+    submat <- pord_mat[x, x]
+    rs <- rowSums(submat)
+    stopifnot(setequal(rs, seq_along(x) - 1L))
+    order(rs)
+  }
+)
+sorted_nonsorted <- Map(`[`, updates[!sorted], unsorted_ords)
+sum(vapply(sorted_nonsorted, \(x) x[(length(x) + 1)/2], integer(1)))
