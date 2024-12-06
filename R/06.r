@@ -19,12 +19,12 @@ jump <- function(pos, direction = c("up", "down", "left", "right")) {
       if (is.infinite(hit))
         list(
           c(NA_integer_, pos[2]),
-          data.frame(row = seq_len(pos[1]), col = pos[2])
+          data.frame(row = seq_len(pos[1]), col = pos[2], dir = "up")
         )
       else
         list(
           c(hit + 1L, pos[2]),
-          data.frame(row = seq(pos[1], hit + 1L), col = pos[2])
+          data.frame(row = seq(pos[1], hit + 1L), col = pos[2], dir = "up")
         )
     },
     down = {
@@ -36,12 +36,12 @@ jump <- function(pos, direction = c("up", "down", "left", "right")) {
       if (is.infinite(hit))
         list(
           c(NA_integer_, pos[2]),
-          data.frame(row = seq(pos[1], size[1]), col = pos[2])
+          data.frame(row = seq(pos[1], size[1]), col = pos[2], dir = "down")
         )
       else
         list(
           c(hit - 1L, pos[2]),
-          data.frame(row = seq(pos[1], hit - 1L), col = pos[2])
+          data.frame(row = seq(pos[1], hit - 1L), col = pos[2], dir = "down")
         )
     },
     left = {
@@ -53,12 +53,12 @@ jump <- function(pos, direction = c("up", "down", "left", "right")) {
       if (is.infinite(hit))
         list(
           c(pos[1], NA_integer_),
-          data.frame(row = pos[1], col = seq_len(pos[2]))
+          data.frame(row = pos[1], col = seq_len(pos[2]), dir = "left")
         )
       else
         list(
           c(pos[1], hit + 1L),
-          data.frame(row = pos[1], col = seq(pos[2], hit + 1L))
+          data.frame(row = pos[1], col = seq(pos[2], hit + 1L), dir = "left")
         )
     },
     right = {
@@ -70,12 +70,12 @@ jump <- function(pos, direction = c("up", "down", "left", "right")) {
       if (is.infinite(hit))
         list(
           c(pos[1], NA_integer_),
-          data.frame(row = pos[1], col = seq(pos[2], size[2]))
+          data.frame(row = pos[1], col = seq(pos[2], size[2]), dir = "right")
         )
       else
         list(
           c(pos[1], hit - 1L),
-          data.frame(row = pos[1], col = seq(pos[2], hit - 1L))
+          data.frame(row = pos[1], col = seq(pos[2], hit - 1L), dir = "right")
         )
     }
   )
@@ -83,7 +83,7 @@ jump <- function(pos, direction = c("up", "down", "left", "right")) {
 
 pos <- start
 direction <- "up"
-visited <- data.frame(row = pos[1], col = pos[2])
+visited <- data.frame(row = pos[1], col = pos[2], dir = direction)
 
 while (!anyNA(pos)) {
   j <- jump(pos, direction)
@@ -94,4 +94,15 @@ while (!anyNA(pos)) {
   ]
 }
 
-nrow(unique(visited))
+nrow(unique(visited[1:2]))
+
+# part two
+
+path <- unique(visited)
+
+mult_vis <- path |>
+  aggregate(
+    dir ~ .,
+    \(x) diff(match(unique(x), c("up", "right", "down", "left"))) %% 4
+  ) |>
+  subset(lengths(dir) > 0)
