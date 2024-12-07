@@ -21,5 +21,8 @@ poss <- function(ins, test, ops = list(`+`, `*`)) {
   )
   any(res == test)
 }
-poss <- mapply(poss, inputs, tests)
-sum(tests[poss])
+sum(tests[mapply(poss, inputs, tests)])
+
+# part two: 110365987435001
+concat <- function(x, y) as.numeric(paste0(as.character(x), as.character(y)))
+sum(tests[mapply(poss, inputs, tests, MoreArgs = list(ops = list(`+`, `*`, concat)))])
