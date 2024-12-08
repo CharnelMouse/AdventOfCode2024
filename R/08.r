@@ -43,3 +43,24 @@ pairwise_simple_antinodes <- function(x, p1, p2) {
 }
 simple_antinodes <- calculate_antinodes(x, antennae, pairwise_simple_antinodes)
 nrow(simple_antinodes)
+
+# part two:
+pairwise_all_antinodes <- function(x, p1, p2) {
+  diff <- p2 - p1
+  res <- matrix(integer(), ncol = 2)
+  # forward
+  pos <- p2
+  while (all(pos >= 1 & pos <= dim(x))) {
+    res <- rbind(res, pos)
+    pos <- pos + diff
+  }
+  # backward
+  pos <- p1
+  while (all(pos >= 1 & pos <= dim(x))) {
+    res <- rbind(res, pos)
+    pos <- pos - diff
+  }
+  res
+}
+all_antinodes <- calculate_antinodes(x, antennae, pairwise_all_antinodes)
+nrow(all_antinodes)
